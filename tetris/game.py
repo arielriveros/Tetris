@@ -1,4 +1,4 @@
-from config import TETROMINO_DATA, TILES_PER_ROW, TILES_PER_COLUMN, FPS
+from config import TETROMINO_DATA, TILES_PER_ROW, TILES_PER_COLUMN, FPS, TETRIS_SCORES
 from pygame import Vector2 as vec
 import random
 import copy
@@ -16,8 +16,13 @@ class TetrisGame:
         self.blocks = [] # blocks that are already placed
         self._bag = [] # bag of shuffled tetrominos
         self._soft_dropping = False # whether the player is soft dropping or not
+        
+        self.level = 1 # the current level
+        self.score = 0 # the player's score
+        self.lines_cleared = 0 # the number of lines cleared by the player
 
     def init(self):
+        self.set_speed()
         self.generate_bag()
         self.spawn_active_tetromino()
 
@@ -88,8 +93,24 @@ class TetrisGame:
         for block in self.blocks:
             block.position += vec(0, sum(block.position[1] < row for row in rows))
 
-    def handle_score(self, rows_cleared, full_clear):
-        print(rows_cleared, full_clear, self._soft_dropping)
+    def handle_score(self, rows_cleared, full_clear): 
+        if rows_cleared > 0 and not full_clear:
+            self.score += TETRIS_SCORES['ROWS'][rows_cleared - 1] * (self._soft_dropping + 1)
+        elif full_clear:
+            self.score += TETRIS_SCORES['FULL_CLEAR'] * (self._soft_dropping + 1)
+        else:
+            self.score += (self._soft_dropping * 1)
+
+        self.lines_cleared += rows_cleared
+
+        # level up every 10 lines
+        if self.lines_cleared >= self.level * 10:
+            self.level += 1
+            self.set_speed()
+            
+    def set_speed(self):
+        time = (0.8 - ((self.level - 1) * 0.007)) ** (self.level - 1)
+        self.speed = 1 / time
 
     def update(self):
         if self.controller.frames_elapsed % (FPS // self.speed) == 0:

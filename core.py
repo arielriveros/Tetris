@@ -46,6 +46,8 @@ class Controller:
         self.clock.tick(FPS)
         self.update()
         self.screen.fill((0, 0, 0))
+        # print on the same line
+        print(f"\r{self.frames_elapsed} frames elapsed", end="")
 
     def _quit(self):
         pygame.quit()

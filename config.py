@@ -23,11 +23,6 @@ ASSET_DATA = [
         "type": "sounds",
         "path": "assets/move.mp3"
     },
-    #{
-    #    "name": "rotate",
-    #    "type": "sounds",
-    #    "path": "assets/sounds/rotate.wav"
-    #},
     {
         "name": "land",
         "type": "sounds",
@@ -43,11 +38,6 @@ ASSET_DATA = [
         "type": "sounds",
         "path": "assets/full_clear.mp3"
     },
-    #{
-    #    "name": "game_over",
-    #    "type": "sounds",
-    #    "path": "assets/sounds/game_over.wav"
-    #},
     {
         "name": "tile",
         "type": "image",
@@ -58,12 +48,12 @@ ASSET_DATA = [
         "type": "image",
         "path": "assets/background.png"
     },
-    #{
-    #    "name": "font",
-    #    "type": "font",
-    #    "path": "assets/fonts/font.ttf",
-    #    "size": 32
-    #}
+    {
+        "name": "font",
+        "type": "font",
+        "path": "assets/retro.ttf",
+        "size": 16
+    }
 ]
 
 TETROMINO_DATA = {
@@ -98,15 +88,8 @@ TETROMINO_DATA = {
 }
 
 TETRIS_SCORES = {
-    "1_ROW": 100,
-    "2_ROWS": 300,
-    "3_ROWS": 500,
-    "4_ROWS": 800,
-
-    "1_ROW_PERFECT_CLEAR": 800,
-    "2_ROWS_PERFECT_CLEAR": 1200,
-    "3_ROWS_PERFECT_CLEAR": 1800,
-    "4_ROWS_PERFECT_CLEAR": 2000,
+    "ROWS": [100, 300, 500, 800],
+    "PERFECT_CLEAR": [800, 1200, 1800, 2000],
 
     "SOFT_DROP": 1,
     "HARD_DROP": 2,

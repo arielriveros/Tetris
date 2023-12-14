@@ -15,6 +15,8 @@ class Renderer:
         for block in self.controller.game.blocks:
             self.draw_block(block)
         self.draw_tetromino(self.controller.game.active_tetromino)
+        
+        self.draw_ui()
 
     def draw_block(self, block, position: tuple[int, int] = (0, 0)):
         resolution = self.controller.get_resolution()
@@ -66,3 +68,24 @@ class Renderer:
             image = transform.scale(image, (image.get_width(), resolution[1]))
 
         self.controller.screen.blit(image, (0, 0))
+
+    def draw_text(self, text, position: tuple[int, int], color: tuple[int, int, int] = (255, 255, 255)):
+        font = self.controller.assets.font
+        text_surface = font.render(text, True, color)
+        draw.rect(self.controller.screen, (0, 0, 0), Rect(position, text_surface.get_size()))
+        self.controller.screen.blit(text_surface, position)
+
+    def draw_ui(self):
+        x_offset = self.controller.get_resolution()[0] // 2 + self.controller.get_resolution()[0] // 4
+        y_offset = self.controller.get_resolution()[1] - self.controller.get_resolution()[1] // 4
+        # TOP LEFT
+        self.draw_text(f"Level:", (10, 10))
+        self.draw_text(f"Score: {self.controller.game.score}", (10, 50))
+        self.draw_text(f"Lines: {self.controller.game.lines_cleared}", (10, 100))
+
+        # BOTTOM LEFT
+        self.draw_text("Stored:", (10, y_offset))
+
+        # TOP RIGHT
+        self.draw_text("Next:", (x_offset, 10))
+
