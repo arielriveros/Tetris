@@ -13,12 +13,13 @@ class Renderer:
         self.draw_background()
         self.draw_grid()
         for block in self.controller.game.blocks:
-            self.draw_block(block)
-        self.draw_tetromino(self.controller.game.active_tetromino)
+            self.draw_block(block, stylized=True)
+        self.draw_tetromino(self.controller.game.ghost_tetromino)
+        self.draw_tetromino(self.controller.game.active_tetromino, stylized=True)
         
         self.draw_ui()
 
-    def draw_block(self, block, position: tuple[int, int] = (0, 0)):
+    def draw_block(self, block, position: tuple[int, int] = (0, 0), stylized: bool = False):
         resolution = self.controller.get_resolution()
         tile_size = resolution[1] // self.controller.rows
         offset = (resolution[0] - tile_size * self.controller.columns) // 2
@@ -30,13 +31,14 @@ class Renderer:
                 (block.position[1] + position[1]) * tile_size,
                 tile_size, tile_size)
             )
-        tile_img = transform.scale(self.controller.assets.tile, (tile_size, tile_size))
-        tile_img.set_alpha(64)
-        self.controller.screen.blit(tile_img, ((block.position[0] + position[0]) * tile_size + offset, (block.position[1] + position[1]) * tile_size))
+        if stylized:
+            tile_img = transform.scale(self.controller.assets.tile, (tile_size, tile_size))
+            tile_img.set_alpha(128)
+            self.controller.screen.blit(tile_img, ((block.position[0] + position[0]) * tile_size + offset, (block.position[1] + position[1]) * tile_size))
 
-    def draw_tetromino(self, tetromino, offset: tuple[int, int] = (0, 0)):
+    def draw_tetromino(self, tetromino, offset: tuple[int, int] = (0, 0), stylized: bool = False):
         for block in tetromino.blocks:
-            self.draw_block(block, tetromino.position + offset)
+            self.draw_block(block, tetromino.position + offset, stylized)
 
     def draw_grid(self):
         resolution = self.controller.get_resolution()

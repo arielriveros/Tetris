@@ -12,6 +12,7 @@ class TetrisGame:
         self.controller = controller
         self.speed = 1 # tiles per second
         self.active_tetromino = None # the tetromino that is currently controlled by the player
+        self.ghost_tetromino = None # the ghost tetromino that shows where the active tetromino will land
         self.next_tetrominos = [] # the tetrominos that will spawn next
         self.blocks = [] # blocks that are already placed
         self._bag = [] # bag of shuffled tetrominos
@@ -37,6 +38,22 @@ class TetrisGame:
         tetromino_data = self._bag.pop()
         self.active_tetromino = Tetromino.from_data(tetromino_data)
         self.active_tetromino.position = vec(TILES_PER_ROW // 2, 0)
+
+    def update_ghost_tetromino(self):
+        if self.active_tetromino is None:
+            self.ghost_tetromino = None
+            return
+
+        # Create a copy of the active tetromino
+        self.ghost_tetromino = copy.deepcopy(self.active_tetromino)
+
+        # Move the ghost tetromino down until it collides
+        while not (self.ghost_tetromino.detect_block_collision(self.blocks) or 
+                self.ghost_tetromino.detect_floor_collision(TILES_PER_COLUMN)):
+            self.ghost_tetromino.move((0, 1))
+
+        # Move it back up one step to be above the collision
+        self.ghost_tetromino.move((0, -1))
 
     def handle_final_collision(self):
         if self.active_tetromino.detect_block_collision(self.blocks) or self.active_tetromino.detect_floor_collision(TILES_PER_COLUMN):
@@ -124,5 +141,6 @@ class TetrisGame:
                 self.controller.assets.line_clear.play()
             else:
                 self.controller.assets.land.play()
+        self.update_ghost_tetromino()
 
         

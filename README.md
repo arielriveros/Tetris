@@ -15,36 +15,34 @@ Then run ``python tetris.py``
   - [X] Piece Movement
   - [X] Piece Rotation
     - [ ] Wall Kicks
-  - [ ] Ghost Piece
-    - [ ] Shows where piece will collide
-    - [ ] Moves along with piece
-    - [ ] Disappears when piece lands
-    - [ ] Disappears when piece is hard dropped
-  - [X] Hard Drop
+  - [X] Ghost Piece
+    - [X] Shows where piece will collide
+    - [X] Updates when piece moves or rotates
+  - [ ] Hard Drop
   - [ ] Hold Piece
     - [ ] Move active piece to hold
     - [ ] Spawn held piece when active piece has landed
   - [ ] Show Next 4 Pieces
     - [ ] Show Next Piece
     - [ ] Show Next 3 Pieces
-  - [ ] Full rows
-    - [ ] Clear full rows
-    - [ ] Add to score
-    - [ ] Increase level after 10 rows
-    - [ ] Increase speed after level increase
+  - [X] Full rows
+    - [X] Clear full rows
+    - [X] Add to score
+    - [X] Increase level after 10 rows
+    - [X] Increase speed after level increase
 - [X] Piece
   - [X] Movement
   - [X] Rotation
   - [X] Collision
 - [ ] User Interface
   - [X] Grid
-  - [ ] Level
-  - [ ] Score
+  - [X] Level
+  - [X] Score
   - [ ] Next Piece
   - [ ] Hold Piece
-- [ ] Audio
+- [X] Audio
   - [x] Music
-  - [ ] Sound Effects
+  - [X] Sound Effects
 
 
 
