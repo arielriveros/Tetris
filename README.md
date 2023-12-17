@@ -4,27 +4,21 @@
 
 First install dependencies with ``pip install -r requirements.txt``
 
-Then run ``python tetris.py``
+Then run ``python main.py``
 
 ## Features
 
 - [X] Gameplay
   - [X] Piece Spawing
-    - [ ] Random Bag Algorithm
+    - [X] Random Bag Algorithm
     - [X] Spawn Piece on Grid
-  - [X] Piece Movement
-  - [X] Piece Rotation
-    - [ ] Wall Kicks
   - [X] Ghost Piece
     - [X] Shows where piece will collide
     - [X] Updates when piece moves or rotates
-  - [ ] Hard Drop
-  - [ ] Hold Piece
-    - [ ] Move active piece to hold
-    - [ ] Spawn held piece when active piece has landed
-  - [ ] Show Next 4 Pieces
-    - [ ] Show Next Piece
-    - [ ] Show Next 3 Pieces
+  - [X] Hard Drop
+  - [X] Hold Piece
+    - [X] Move active piece to hold
+    - [X] Spawn held piece when active piece has landed
   - [X] Full rows
     - [X] Clear full rows
     - [X] Add to score
@@ -33,16 +27,14 @@ Then run ``python tetris.py``
 - [X] Piece
   - [X] Movement
   - [X] Rotation
+    - [ ] Wall Kicks
   - [X] Collision
-- [ ] User Interface
+- [X] User Interface
   - [X] Grid
   - [X] Level
   - [X] Score
-  - [ ] Next Piece
-  - [ ] Hold Piece
+  - [X] Next Piece
+  - [X] Hold Piece
 - [X] Audio
   - [x] Music
   - [X] Sound Effects
-
-
-
