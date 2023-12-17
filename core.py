@@ -1,5 +1,5 @@
 import pygame
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, RESIZABLE
 
 class Assets(dict):
     def __init__(self):
@@ -30,7 +30,8 @@ class Controller:
         # pygame
         pygame.init()
         # screen
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), RESIZABLE)
         pygame.display.set_caption(title)
 
         # assets
@@ -46,8 +47,6 @@ class Controller:
         self.clock.tick(FPS)
         self.update()
         self.screen.fill((0, 0, 0))
-        # print on the same line
-        print(f"\r{self.frames_elapsed} frames elapsed", end="")
 
     def _quit(self):
         pygame.quit()

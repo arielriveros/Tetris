@@ -1,9 +1,10 @@
 # Configs
-SCREEN_WIDTH = 640
-SCREEN_HEIGHT = 480
+SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 600
+RESIZABLE = False
 FPS = 60
-TILES_PER_ROW = 10
-TILES_PER_COLUMN = 20
+ROWS = 10
+COLUMNS = 20
 
 SOUND_OPTIONS = {
     "ACTIVE_BGM": True,
@@ -17,6 +18,11 @@ ASSET_DATA = [
         "name": "bgm",
         "type": "sounds",
         "path": "assets/bgm.mp3"
+    },
+    {
+        "name": "game_over",
+        "type": "sounds",
+        "path": "assets/game_over.mp3"
     },
     {
         "name": "move",
@@ -58,30 +64,37 @@ ASSET_DATA = [
 
 TETROMINO_DATA = {
     "L": {
+        "name": "L",
         "positions": [[0, -1], [0, 0], [0, 1], [1, 1]],
         "color": (255, 0, 0)
     },
     "J": {
+        "name": "J",
         "positions": [[0, -1], [0, 0], [0, 1], [-1, 1]],
         "color": (0, 255, 0)
     },
     "O": {
+        "name": "O",
         "positions": [[0, 0], [0, 1], [1, 0], [1, 1]],
         "color": (0, 0, 255)
     },
     "I": {
+        "name": "I",
         "positions": [[0, -1], [0, 0], [0, 1], [0, 2]],
         "color": (255, 255, 0)
     },
     "S": {
+        "name": "S",
         "positions": [[0, 0], [0, 1], [1, 0], [1, -1]],
         "color": (255, 0, 255)
     },
     "Z": {
+        "name": "Z",
         "positions": [[0, 0], [0, 1], [-1, 0], [-1, -1]],
         "color": (0, 255, 255)
     },
     "T": {
+        "name": "T",
         "positions": [[0, 0], [0, 1], [0, -1], [-1, 0]],
         "color": (255, 255, 255)
     }

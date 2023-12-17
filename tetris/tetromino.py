@@ -6,7 +6,8 @@ class Block:
         self.color: tuple[int, int, int] = color
 
 class Tetromino:
-    def __init__(self, blocks):
+    def __init__(self, blocks, type = None):
+        self.type = type
         self.blocks: tuple[Block, ...] = blocks
         self.position: vec = vec(0, 0)
 
@@ -17,21 +18,31 @@ class Tetromino:
         for block in self.blocks:
             block.position = vec(-block.position[1], block.position[0]) * -direction
 
-    def detect_wall_collision(self, columns):
+    def detect_collision(self, columns, rows, blocks):
+        collides_with_blocks = self._detect_block_collision(blocks)
+        collides_with_floor = self._detect_floor_collision(rows)
+        collides_with_wall = self._detect_wall_collision(columns)
+        return {
+            "blocks": collides_with_blocks,
+            "floor": collides_with_floor,
+            "wall": collides_with_wall
+        }
+
+    def _detect_wall_collision(self, columns):
         for block in self.blocks:
             absolute_position = block.position + self.position
             if absolute_position[0] < 0 or absolute_position[0] > columns - 1:
                 return True
         return False
     
-    def detect_floor_collision(self, rows):
+    def _detect_floor_collision(self, rows):
         for block in self.blocks:
             absolute_position = block.position + self.position
             if absolute_position[1] > rows - 1:
                 return True
         return False
     
-    def detect_block_collision(self, blocks):
+    def _detect_block_collision(self, blocks):
         for block in self.blocks:
             absolute_position = block.position + self.position
             for other_block in blocks:
@@ -41,9 +52,10 @@ class Tetromino:
     
     @staticmethod
     def from_data(data):
+        type = data["name"]
         positions = data["positions"]
         color = data["color"]
         blocks = []
         for position in positions:
             blocks.append(Block(position, color))
-        return Tetromino(tuple(blocks))
+        return Tetromino(tuple(blocks), type)
