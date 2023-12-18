@@ -1,29 +1,39 @@
 import pygame
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, RESIZABLE
+from data.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, RESIZABLE
 
-class Assets(dict):
+def Singleton(cls):
+    instances = {}
+    def getinstance():
+        if cls not in instances:
+            instances[cls] = cls()
+        return instances[cls]
+    return getinstance
+
+@Singleton
+class AssetManager():
     def __init__(self):
-        super().__init__()
-
-    def __getattr__(self, name):
-        return self[name]
-    
-    def __setattr__(self, name, value):
-        self[name] = value
+        self.images = {}
+        self.sounds = {}
+        self.fonts = {}
 
     def load_assets(self, assets):
         for asset in assets:
-            loaded_asset = None
             if asset["type"] == "sounds":
-                loaded_asset = pygame.mixer.Sound(asset["path"])
+                self.sounds[asset["name"]] = pygame.mixer.Sound(asset["path"])
             elif asset["type"] == "image":
-                loaded_asset = pygame.image.load(asset["path"])
+                self.images[asset["name"]] = pygame.image.load(asset["path"])
             elif asset["type"] == "font":
-                loaded_asset = pygame.font.Font(asset["path"], asset["size"])
+                self.fonts[asset["name"]] = pygame.font.Font(asset["path"], asset["size"])
             else:
-                loaded_asset = None
-        
-            self[asset["name"]] = loaded_asset
+                raise Exception("Invalid asset type")
+            
+    def play_sound(self, name, loops = 0):
+        if name in self.sounds:
+            self.sounds[name].play(loops = loops)
+
+    def stop_sound(self, name):
+        if name in self.sounds:
+            self.sounds[name].stop()
 
 class Controller:
     def __init__(self, title):
@@ -33,26 +43,23 @@ class Controller:
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), RESIZABLE)
         pygame.display.set_caption(title)
-
-        # assets
-        self.assets = Assets()
     
         # clock
         self.clock = pygame.time.Clock()
         self.running = True
         self.frames_elapsed = 0
 
-    def _update(self):
+    def __update(self):
         pygame.display.update()
         self.clock.tick(FPS)
         self.update()
         self.screen.fill((0, 0, 0))
 
-    def _quit(self):
+    def __quit(self):
         pygame.quit()
         exit()
 
-    def _handle_pygame_events(self):
+    def __handle_pygame_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -62,9 +69,6 @@ class Controller:
             
             if event.type == pygame.KEYUP:
                 self.handle_key_up(event)
-
-    def load_assets(self, assets):
-        self.assets.load_assets(assets)
 
     def get_resolution(self):
         return self.screen.get_width(), self.screen.get_height()
@@ -91,8 +95,8 @@ class Controller:
     def run(self):
         self.init()
         while self.running:
-            self._handle_pygame_events()
-            self._update()
+            self.__handle_pygame_events()
+            self.__update()
             self.draw()
             self.frames_elapsed += 1
-        self._quit()
+        self.__quit()

@@ -1,7 +1,7 @@
 import copy
 from pygame import Vector2 as vec
 
-from config import TETROMINO_DATA, WALL_KICK_DATA
+from data.data import TETROMINO_DATA, WALL_KICK_DATA
 
 class Block:
     def __init__(self, position, color):
