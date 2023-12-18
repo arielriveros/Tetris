@@ -1,4 +1,4 @@
-from pygame import draw, transform, Rect
+from pygame import BLEND_RGBA_MULT, draw, transform, Rect
 
 class Renderer:
     """ 
@@ -26,23 +26,24 @@ class Renderer:
         resolution = self.controller.get_resolution()
         tile_size = resolution[1] // self.controller.columns
         offset = (resolution[0] - tile_size * self.controller.rows) // 2
-        draw.rect(
-            self.controller.screen,
-            block.color,
-            Rect(
-                (block.position[0] + position[0]) * tile_size + offset,
-                (block.position[1] + position[1]) * tile_size,
-                tile_size, tile_size)
-            )
+
         if stylized:
             tile_img = transform.scale(self.controller.assets.tile, (tile_size, tile_size))
-            tile_img.set_alpha(128)
+            tile_img.fill(block.color, special_flags=BLEND_RGBA_MULT)
             self.controller.screen.blit(tile_img, ((block.position[0] + position[0]) * tile_size + offset, (block.position[1] + position[1]) * tile_size))
+
+        else:
+            draw.rect(
+                self.controller.screen,
+                block.color,
+                Rect((block.position[0] + position[0]) * tile_size + offset,
+                     (block.position[1] + position[1]) * tile_size,
+                     tile_size, tile_size))
 
     def draw_tetromino(self, tetromino, offset: tuple[int, int] = (0, 0), stylized: bool = False):
         if tetromino is None:
             return
-        for block in tetromino.blocks:
+        for block in tetromino.get_blocks():
             self.draw_block(block, tetromino.position + offset, stylized)
 
     def draw_grid(self):
@@ -87,7 +88,7 @@ class Renderer:
         x_offset = resolution[0] // 2 + self.controller.get_resolution()[0] // 4
         y_offset = resolution[1] - self.controller.get_resolution()[1] // 4
         # TOP LEFT
-        self.draw_text(f"Level:", (10, 10))
+        self.draw_text(f"Level: {self.controller.game.level}", (10, 10))
         self.draw_text(f"Score: {self.controller.game.score}", (10, 50))
         self.draw_text(f"Lines: {self.controller.game.lines_cleared}", (10, 100))
         if self.controller.game.combo > 0:

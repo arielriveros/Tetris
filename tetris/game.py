@@ -1,7 +1,6 @@
 from config import TETROMINO_DATA, FPS, TETRIS_SCORES
 from pygame import Vector2 as vec
 import random
-import copy
 from .tetromino import Tetromino, Block
 
 class TetrisGame:
@@ -87,7 +86,7 @@ class TetrisGame:
         self.begin_game()
 
     def generate_bag(self):
-        list_of_tetrominos = list(TETROMINO_DATA.values())
+        list_of_tetrominos = list(TETROMINO_DATA.keys())
         random.shuffle(list_of_tetrominos)
         self.bag = list_of_tetrominos
 
@@ -95,8 +94,8 @@ class TetrisGame:
         for _ in range(3):
             if len(self.bag) == 0:
                 self.generate_bag()
-            tetromino_data = self.bag.pop()
-            self.next_tetrominos.append(Tetromino.from_data(tetromino_data))
+            tetromino_type = self.bag.pop()
+            self.next_tetrominos.append(Tetromino.from_data(tetromino_type))
 
     def spawn_active_tetromino(self):
         tetromino = None
@@ -104,7 +103,7 @@ class TetrisGame:
         if self.held_tetromino is not None and not self.release_held:        
             tetromino = self.held_tetromino
             self.held_tetromino = None
-            self.release_held       = True
+            self.release_held = True
         # if there is no held tetromino, get the next tetromino from the next tetromino queue
         else:
             tetromino = self.next_tetrominos.pop(0)
@@ -116,7 +115,7 @@ class TetrisGame:
         # add the next tetromino to the queue from the shuffled bag
         self.next_tetrominos.append(Tetromino.from_data(self.bag.pop()))
         # set the position of the active tetromino to the top of the board
-        self.active_tetromino.position = vec(self.controller.rows // 2, 0)
+        self.active_tetromino.position = vec(self.controller.rows // 2, -2)
 
         # check if the tetromino is colliding with blocks and end the game if it is
         result = self.active_tetromino.detect_collision(self.controller.rows, self.controller.columns, self.blocks)
@@ -129,7 +128,7 @@ class TetrisGame:
             self.ghost_tetromino = None
             return
         # Create a copy of the active tetromino
-        self.ghost_tetromino = copy.deepcopy(self.active_tetromino)
+        self.ghost_tetromino = self.active_tetromino.clone()
         # check if the ghost tetromino is colliding with blocks or the floor and move it up until it's colliding
         result = self.ghost_tetromino.detect_collision(self.controller.rows, self.controller.columns, self.blocks)
         while not result["floor"] and not result["blocks"]:
@@ -140,26 +139,29 @@ class TetrisGame:
         self.ghost_tetromino.move((0, -1))
     
     def land_active_tetromino(self):
-        for block in self.active_tetromino.blocks:
+        for block in self.active_tetromino.get_blocks():
             absolute_position = block.position + self.active_tetromino.position - vec(0, 1)
             self.blocks.append(Block(absolute_position, block.color))
         self.soft_drop_lock = True
         self.spawn_active_tetromino()
 
     def can_move_active_tetromino(self, direction):
-        clone = Tetromino(self.active_tetromino.blocks)
+        clone = self.active_tetromino.clone()
         clone.position = self.active_tetromino.position + direction
         result = clone.detect_collision(self.controller.rows, self.controller.columns, self.blocks)
         return not (result["blocks"] or result["wall"] or result["floor"])
 
-    def can_rotate_active_tetromino(self, direction):
-        #TODO: Handle wall kicks
-        # A deep copy is needed because the rotate method modifies the blocks from the original tetromino
-        clone = copy.deepcopy(self.active_tetromino)
-        clone.position = self.active_tetromino.position
+    def apply_wall_kick(self, direction):
+        wall_kick_tests = self.active_tetromino.get_wall_kicks()['L' if direction == 1 else 'R']
+        clone = self.active_tetromino.clone()
         clone.rotate(direction)
-        result = clone.detect_collision(self.controller.rows, self.controller.columns, self.blocks)
-        return not (result["blocks"] or result["wall"] or result["floor"])
+        for test in wall_kick_tests:            
+            clone.position = self.active_tetromino.position + vec(*test)
+            result = clone.detect_collision(self.controller.rows, self.controller.columns, self.blocks)
+            if not (result["blocks"] or result["wall"] or result["floor"]):
+                return True, test
+        return False, None
+
 
     def check_full_rows(self):
         for block in self.blocks:
@@ -220,6 +222,7 @@ class TetrisGame:
         if self.lines_cleared >= self.level * 10:
             self.level += 1
             self.set_speed()
+            self.controller.assets.level_up.play()
 
     def set_speed(self):
         # calculate the speed based on the level
@@ -232,14 +235,17 @@ class TetrisGame:
             self.controller.assets.move.play()
 
     def handle_rotation(self, direction):
-        if self.can_rotate_active_tetromino(direction) and self.playing:
-            self.active_tetromino.rotate(direction)
+        if self.playing:
+            test, delta = self.apply_wall_kick(direction)
+            if test:
+                self.active_tetromino.rotate(direction)
+                self.active_tetromino.move(vec(*delta))
             self.controller.assets.move.play()
 
     def hold_active_tetromino(self):
         # if there is no held tetromino, hold the active tetromino and spawn a new one
         if self.held_tetromino is None and self.playing:
-            self.held_tetromino = Tetromino.from_data(TETROMINO_DATA[self.active_tetromino.type])
+            self.held_tetromino = Tetromino.from_data(str(self.active_tetromino))
             self.spawn_active_tetromino()
             self.release_held = False
 

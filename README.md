@@ -27,7 +27,7 @@ Then run ``python main.py``
 - [X] Piece
   - [X] Movement
   - [X] Rotation
-    - [ ] Wall Kicks
+    - [X] Wall Kicks
   - [X] Collision
 - [X] User Interface
   - [X] Grid

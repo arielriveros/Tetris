@@ -21,6 +21,7 @@ class Tetris(Controller):
         self.assets.land.set_volume(SOUND_OPTIONS["SFX_VOLUME"])
         self.assets.line_clear.set_volume(SOUND_OPTIONS["SFX_VOLUME"])
         self.assets.full_clear.set_volume(SOUND_OPTIONS["SFX_VOLUME"])
+        self.assets.level_up.set_volume(SOUND_OPTIONS["SFX_VOLUME"])
 
         self.game.init()
 
