@@ -1,40 +1,42 @@
 # PyGame Tetris
 
+A Tetris clone written in Python using the PyGame library.
+
 ## Install and Run
 
-First install dependencies with ``pip install -r requirements.txt``
+Install dependencies with ``pip install -r requirements.txt``
 
 Then run ``python main.py``
 
-## Features
+## Dependencies
 
-- [X] Gameplay
-  - [X] Piece Spawing
-    - [X] Random Bag Algorithm
-    - [X] Spawn Piece on Grid
-  - [X] Ghost Piece
-    - [X] Shows where piece will collide
-    - [X] Updates when piece moves or rotates
-  - [X] Hard Drop
-  - [X] Hold Piece
-    - [X] Move active piece to hold
-    - [X] Spawn held piece when active piece has landed
-  - [X] Full rows
-    - [X] Clear full rows
-    - [X] Add to score
-    - [X] Increase level after 10 rows
-    - [X] Increase speed after level increase
-- [X] Piece
-  - [X] Movement
-  - [X] Rotation
-    - [X] Wall Kicks
-  - [X] Collision
-- [X] User Interface
-  - [X] Grid
-  - [X] Level
-  - [X] Score
-  - [X] Next Piece
-  - [X] Hold Piece
-- [X] Audio
-  - [x] Music
-  - [X] Sound Effects
+- Python 3.12.1
+- PyGame 2.5.2
+
+## Controls
+
+- ``Left`` - Move left
+- ``Right`` - Move right
+- ``Up`` - Rotate clockwise
+- ``Down`` - Soft drop
+- ``Space`` - Hard drop
+- ``Z`` or ``Left Ctrl`` - Rotate counter-clockwise
+- ``C`` or ``Left Shift`` - Hold piece
+
+## Testing
+
+For testing of practice moves, run ``python main.py test_name``
+
+Where ``test_name`` is one of the following:
+
+- ``perfect_clear_1`` - tests perfect clears
+- ``perfect_clear_2`` - tests perfect clears
+- ``combo``   - tests combos
+- ``t-spin``  - tests wall kicks using T-Spin
+
+You can add a custom test by modifying the TESTING_SUITE dictionary located in ``data/data_test.py``. The TESTING_GRID value's dimension must coincide with the grid size defined in ``data/config.py``
+
+## Screenshots
+![Gameplay](img/gameplay.png)
+![Testing](img/t-spin.gif)
+
