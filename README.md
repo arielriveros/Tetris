@@ -25,7 +25,7 @@ Then run ``python main.py``
 
 ## Testing
 
-For testing of practice moves, run ``python main.py test_name``
+For testing or practice moves, run ``python main.py test_name``
 
 Where ``test_name`` is one of the following:
 
