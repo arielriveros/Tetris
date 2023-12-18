@@ -61,7 +61,10 @@ class Marathon:
 
         # if the next tetrominos queue is empty, generate the first 3 tetrominos
         # this will happen only when the game starts
-        if len(self.next_tetrominos) != 0:
+        self.init_next_tetrominos()
+
+    def init_next_tetrominos(self):
+        if len(self.next_tetrominos) > 0:
             return
         for _ in range(3):
             if len(self.bag) == 0:
@@ -305,6 +308,10 @@ class MarathonTest(Marathon):
     def generate_bag(self):
         self.bag = list(self.test_data['TESTING_TETROMINOS'])
         self.bag.reverse()
+        self.init_next_tetrominos()
 
     def set_speed(self):
         self.speed = self.test_data['TESTING_SPEED']
+
+    def reset_game(self):
+        pass
